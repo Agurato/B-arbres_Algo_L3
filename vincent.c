@@ -32,20 +32,25 @@ B_tree splitNode(B_tree tree) {
     int i;
     B_tree temp = createTree();
     // We put the middle value in the new root
-    temp->keys[tree->nbKeys ++] = tree->keys[DEGREE];
+    temp->keys[temp->nbKeys ++] = tree->keys[DEGREE];
 
-    B_tree leftSon, rightSon;
+    // We create the left and right sons
+    B_tree leftSon = createTree();
+    B_tree rightSon = createTree();
 
-    // We keep only the values on the left to put in the left son
-    for(i=2*DEGREE ; i>=DEGREE ; i--) {
-        leftSon = deleteTree(tree->sons[i]);
-        leftSon->keys[-- tree->nbKeys] = 0;
+    // We had the keys and sons to the left son
+    for(i=0 ; i<DEGREE ; i++) {
+        leftSon->keys[leftSon->nbKeys ++] = tree->keys[i];
+        leftSon->sons[i] = tree->sons[i];
     }
-    // We keep only the values on the right to put in the right son
-    for(i=0 ; i<=DEGREE ; i++) {
-        rightSon = deleteTree(tree->sons[i]);
-        rightSon->keys[-- tree->nbKeys] = 0;
+    leftSon->sons[DEGREE] = tree->sons[DEGREE];
+
+    // We had the keys and sons to the right son
+    for(i=DEGREE+1 ; i<2*DEGREE+1 ; i++) {
+        rightSon->keys[rightSon->nbKeys ++] = tree->keys[i];
+        rightSon->sons[i-DEGREE-1] = tree->sons[i];
     }
+    rightSon->sons[DEGREE] = tree->sons[2*DEGREE+1];
 
     // We rearrange the sons of the tree to return
     temp->sons[0] = leftSon;
@@ -88,6 +93,16 @@ B_tree keyBelongs(B_tree tree, int key) {
 
 }
 
-void displayTree(B_tree tree) {
-
+void displayTree(B_tree tree, int height) {
+    if(! emptyTree(tree)) {
+        int i;
+        printf("%d \\ ", height);
+        for(i=0 ; i<tree->nbKeys ; i++) {
+            printf("%d - ", tree->keys[i]);
+        }
+        printf("\n");
+        for(i=0 ; i<DEGREE*2+1 ; i++) {
+            displayTree(tree->sons[i], height+1);
+        }
+    }
 }
