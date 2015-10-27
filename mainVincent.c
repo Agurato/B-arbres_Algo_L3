@@ -47,7 +47,7 @@ int main(int argc, char const *argv[]) {
 
     printf("\nAfter deletion :\n");
     */
-
+    /*
     B_tree tree = createTree();
     tree->nbKeys = 5;
     tree->keys[0] = 9;
@@ -90,7 +90,13 @@ int main(int argc, char const *argv[]) {
     tree->sons[5]->keys[2] = 145;
 
     tree = splitNode(tree);
+    */
 
+    B_tree tree = createTree();
+    tree = addKey(tree, 9);
+    tree = addKey(tree, 20);
+    tree = addKey(tree, 100);
+    tree = addKey(tree, 60);
     displayTree(tree, 0);
 
     return 0;

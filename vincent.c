@@ -62,27 +62,27 @@ B_tree splitNode(B_tree tree) {
 B_tree addKey(B_tree tree, int key) {
     if(emptyTree(tree)) {
         tree = createTree();
-    }
-    /*
-    // ERREUR : il faut ajouter aux feuilles avant d'ajouter à la racine !!!
-    // If the tree is empty
-    if(emptyTree(tree)) {
-        // We create it, add the key in the keys tab, and increment the nb of keys
-        tree = createTree();
         tree->keys[tree->nbKeys ++] = key;
     }
-    else if(tree->nbKeys < 2*DEGREE) {
-        tree->keys[tree->nbKeys ++] = key;
-    }
-    else if(tree->nbKeys == 2*DEGREE) {
-        tree->keys[tree->nbKeys ++] = key;
-        B_tree temp = createTree();
-        temp->keys[temp->nbKeys ++] = tree->keys[tree->nbKeys /2];
+    else if(emptyTree(tree->sons[0])){
+        int pos;
+        for(pos=0 ; (pos < tree->nbKeys) && (key > tree->keys[pos]) ; pos++) {
+        }
+        int i;
+        for(i=tree->nbKeys ; i>pos ; i--) {
+            tree->keys[i] = tree->keys[i-1];
+        }
+        tree->keys[pos] = key;
+        tree->nbKeys ++;
     }
     else {
-        printf("Error : tree->nbKeys > 2*DEGREE");
+        int pos;
+        for(pos=0 ; (pos < tree->nbKeys) && (key > tree->keys[pos]) ; pos++) {
+        }
+        tree->sons[pos] = addKey(tree->sons[pos], key);
     }
-    */
+    // Here we need to verify the number of keys using DEGREE
+    // And make the arrangements with splitNode() 
 }
 
 B_tree deleteKey(B_tree tree, int key) {
