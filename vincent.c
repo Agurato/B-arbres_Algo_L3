@@ -9,6 +9,7 @@ B_tree createTree() {
     for(i=0 ; i<2*DEGREE+1 ; i++) {
         tree->sons[i] = NULL;
     }
+    tree->tempSon = NULL;
     return tree;
 }
 
@@ -80,9 +81,26 @@ B_tree addKey(B_tree tree, int key) {
         for(pos=0 ; (pos < tree->nbKeys) && (key > tree->keys[pos]) ; pos++) {
         }
         tree->sons[pos] = addKey(tree->sons[pos], key);
+
+        if(! emptyTree(tree->tempSon)) {
+            B_tree temp = splitNode(tree);
+            temp->sons[1]->sons[DEGREE] = tree->tempSon;
+
+            tree = temp;
+
+            free(tree->tempSon);
+            tree->tempSon = NULL;
+        }
+
+        if(tree->sons[pos]->nbKeys == 2*DEGREE+1) {
+            B_tree temp = splitNode(tree->sons[pos]);
+            tree->tempSon = temp->sons[1];
+            tree->keys[tree->nbKeys ++] = temp->keys[0];
+            tree->sons[4] = temp->sons[0];
+        }
     }
-    // Here we need to verify the number of keys using DEGREE
-    // And make the arrangements with splitNode() 
+    
+    return tree;
 }
 
 B_tree deleteKey(B_tree tree, int key) {

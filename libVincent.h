@@ -4,6 +4,7 @@ typedef struct node {
     int keys[2*DEGREE+1];
     int nbKeys;
     struct node *sons[2*DEGREE+1];
+    struct node *tempSon;
 }*B_tree;
 
 typedef enum {false, true} Boolean;

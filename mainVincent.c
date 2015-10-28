@@ -4,7 +4,6 @@
 
 int main(int argc, char const *argv[]) {
 
-    /* This is an example of a tree
     B_tree tree = createTree();
     tree->nbKeys = 4;
     tree->keys[0] = 9;
@@ -41,12 +40,15 @@ int main(int argc, char const *argv[]) {
     tree->sons[4]->keys[1] = 135;
     tree->sons[4]->keys[2] = 145;
 
-    displayTree(tree);
+    tree = addKey(tree, 105);
+    tree = addKey(tree, 110);
 
-    tree = deleteTree(tree);
+    if(tree->nbKeys == 2*DEGREE+1) {
+        tree = splitNode(tree);
+    }
 
-    printf("\nAfter deletion :\n");
-    */
+    displayTree(tree, 0);
+
     /*
     B_tree tree = createTree();
     tree->nbKeys = 5;
@@ -91,13 +93,21 @@ int main(int argc, char const *argv[]) {
 
     tree = splitNode(tree);
     */
-
+    /*
     B_tree tree = createTree();
+
     tree = addKey(tree, 9);
     tree = addKey(tree, 20);
     tree = addKey(tree, 100);
     tree = addKey(tree, 60);
-    displayTree(tree, 0);
 
+    printf("nbKeys:%d\n", tree->nbKeys);
+
+    if(tree->nbKeys == 2*DEGREE+1) {
+        tree = splitNode(tree);
+    }
+
+    displayTree(tree, 0);
+    */
     return 0;
 }
