@@ -61,49 +61,53 @@ B_tree splitNode(B_tree tree) {
 }
 
 B_tree addKey(B_tree tree, int key) {
+    // If the tree is empty, we simply add the new key
     if(emptyTree(tree)) {
         tree = createTree();
         tree->keys[tree->nbKeys ++] = key;
     }
+    // If the sons of the tree are empty
     else if(emptyTree(tree->sons[0])){
         int pos;
         for(pos=0 ; (pos < tree->nbKeys) && (key > tree->keys[pos]) ; pos++) {
         }
-        printf("tree->sons[0] == NULL : pos=%d\n", pos);
         int i;
+        // We shift all the values to add the new one in the right place
         for(i=tree->nbKeys ; i>pos ; i--) {
             tree->keys[i] = tree->keys[i-1];
         }
         tree->keys[pos] = key;
         tree->nbKeys ++;
-        printf("\nTree after adding %d :\n", key);
-        displayTree(tree, 10);
     }
+    // Else
     else {
         int pos;
+        // We had the value via the right son
         for(pos=0 ; (pos < tree->nbKeys) && (key > tree->keys[pos]) ; pos++) {
         }
-        printf("tree->sons[0] != NULL : pos=%d\n", pos);
         tree->sons[pos] = addKey(tree->sons[pos], key);
 
+        // If the son where we added is full, we split the son
         if(tree->sons[pos]->nbKeys == 2*DEGREE+1) {
-            printf("\ntree->sons[pos]->nbKeys == 2*DEGREE+1\n");
             B_tree temp = splitNode(tree->sons[pos]);
             int i;
+            // We shift all the values, and add the root of the split to the right place
             for(i=tree->nbKeys ; i>pos ; i--) {
                 tree->keys[i] = tree->keys[i-1];
             }
             tree->keys[pos] = temp->keys[0];
             tree->nbKeys++;
+            // If the tree where the split root was added is full
             if(tree->nbKeys == 2*DEGREE+1) {
+                // We save the last son apart from the list
                 tree->tempSon = tree->sons[4];
-                for(i=tree->nbKeys-1 ; i>pos ; i--) {
-                    tree->sons[i] = tree->sons[i-1];
-                }
+            }
+            // We shift the sons and add the 2 split sons
+            for(i=tree->nbKeys-1 ; i>pos ; i--) {
+                tree->sons[i] = tree->sons[i-1];
             }
             tree->sons[pos] = temp->sons[0];
             tree->sons[pos+1] = temp->sons[1];
-            printf("temp created !\n");
         }
 
         if(! emptyTree(tree->tempSon)) {

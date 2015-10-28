@@ -41,39 +41,24 @@ int main(int argc, char const *argv[]) {
     tree->sons[4]->keys[2] = 145;
 
     tree = addKey(tree, 80);
-    if(tree->nbKeys == 2*DEGREE+1) {
-        tree = splitNode(tree);
-    }
-
     tree = addKey(tree, 105);
-    if(tree->nbKeys == 2*DEGREE+1) {
-        tree = splitNode(tree);
-    }
-
-    printf("\n\nAdding 85 :\n");
     tree = addKey(tree, 85);
-    if(tree->nbKeys == 2*DEGREE+1) {
-        tree = splitNode(tree);
-    }
-    printf("\n");
-    displayTree(tree, 0);
-
-    printf("\n\nAdding 110 :\n");
     tree = addKey(tree, 110);
+
+    /* Il y a peut-être besoin de ça après chaque addKey(...)
     if(tree->nbKeys == 2*DEGREE+1) {
         tree = splitNode(tree);
     }
-    printf("\n");
+    */
+
     displayTree(tree, 0);
 
     /*
     B_tree tree = createTree();
-    tree->nbKeys = 5;
+    tree->nbKeys = 3;
     tree->keys[0] = 9;
     tree->keys[1] = 20;
     tree->keys[2] = 60;
-    tree->keys[3] = 85;
-    tree->keys[4] = 100;
 
     tree->sons[0] = createTree();
     tree->sons[0]->nbKeys = 2;
@@ -93,36 +78,13 @@ int main(int argc, char const *argv[]) {
     tree->sons[2]->keys[2] = 57;
 
     tree->sons[3] = createTree();
-    tree->sons[3]->nbKeys = 2;
+    tree->sons[3]->nbKeys = 3;
     tree->sons[3]->keys[0] = 75;
     tree->sons[3]->keys[1] = 80;
+    tree->sons[3]->keys[2] = 95;
 
-    tree->sons[4] = createTree();
-    tree->sons[4]->nbKeys = 2;
-    tree->sons[4]->keys[0] = 95;
-    tree->sons[4]->keys[1] = 99;
-
-    tree->sons[5] = createTree();
-    tree->sons[5]->nbKeys = 3;
-    tree->sons[5]->keys[0] = 115;
-    tree->sons[5]->keys[1] = 135;
-    tree->sons[5]->keys[2] = 145;
-
-    tree = splitNode(tree);
-    */
-    /*
-    B_tree tree = createTree();
-
-    tree = addKey(tree, 9);
-    tree = addKey(tree, 20);
+    tree = addKey(tree, 99);
     tree = addKey(tree, 100);
-    tree = addKey(tree, 60);
-
-    printf("nbKeys:%d\n", tree->nbKeys);
-
-    if(tree->nbKeys == 2*DEGREE+1) {
-        tree = splitNode(tree);
-    }
 
     displayTree(tree, 0);
     */
