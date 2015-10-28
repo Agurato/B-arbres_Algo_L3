@@ -69,18 +69,42 @@ B_tree addKey(B_tree tree, int key) {
         int pos;
         for(pos=0 ; (pos < tree->nbKeys) && (key > tree->keys[pos]) ; pos++) {
         }
+        printf("tree->sons[0] == NULL : pos=%d\n", pos);
         int i;
         for(i=tree->nbKeys ; i>pos ; i--) {
             tree->keys[i] = tree->keys[i-1];
         }
         tree->keys[pos] = key;
         tree->nbKeys ++;
+        printf("\nTree after adding %d :\n", key);
+        displayTree(tree, 10);
     }
     else {
         int pos;
         for(pos=0 ; (pos < tree->nbKeys) && (key > tree->keys[pos]) ; pos++) {
         }
+        printf("tree->sons[0] != NULL : pos=%d\n", pos);
         tree->sons[pos] = addKey(tree->sons[pos], key);
+
+        if(tree->sons[pos]->nbKeys == 2*DEGREE+1) {
+            printf("\ntree->sons[pos]->nbKeys == 2*DEGREE+1\n");
+            B_tree temp = splitNode(tree->sons[pos]);
+            int i;
+            for(i=tree->nbKeys ; i>pos ; i--) {
+                tree->keys[i] = tree->keys[i-1];
+            }
+            tree->keys[pos] = temp->keys[0];
+            tree->nbKeys++;
+            if(tree->nbKeys == 2*DEGREE+1) {
+                tree->tempSon = tree->sons[4];
+                for(i=tree->nbKeys-1 ; i>pos ; i--) {
+                    tree->sons[i] = tree->sons[i-1];
+                }
+            }
+            tree->sons[pos] = temp->sons[0];
+            tree->sons[pos+1] = temp->sons[1];
+            printf("temp created !\n");
+        }
 
         if(! emptyTree(tree->tempSon)) {
             B_tree temp = splitNode(tree);
@@ -91,15 +115,8 @@ B_tree addKey(B_tree tree, int key) {
             free(tree->tempSon);
             tree->tempSon = NULL;
         }
-
-        if(tree->sons[pos]->nbKeys == 2*DEGREE+1) {
-            B_tree temp = splitNode(tree->sons[pos]);
-            tree->tempSon = temp->sons[1];
-            tree->keys[tree->nbKeys ++] = temp->keys[0];
-            tree->sons[4] = temp->sons[0];
-        }
     }
-    
+
     return tree;
 }
 

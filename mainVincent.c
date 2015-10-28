@@ -40,13 +40,30 @@ int main(int argc, char const *argv[]) {
     tree->sons[4]->keys[1] = 135;
     tree->sons[4]->keys[2] = 145;
 
-    tree = addKey(tree, 105);
-    tree = addKey(tree, 110);
-
+    tree = addKey(tree, 80);
     if(tree->nbKeys == 2*DEGREE+1) {
         tree = splitNode(tree);
     }
 
+    tree = addKey(tree, 105);
+    if(tree->nbKeys == 2*DEGREE+1) {
+        tree = splitNode(tree);
+    }
+
+    printf("\n\nAdding 85 :\n");
+    tree = addKey(tree, 85);
+    if(tree->nbKeys == 2*DEGREE+1) {
+        tree = splitNode(tree);
+    }
+    printf("\n");
+    displayTree(tree, 0);
+
+    printf("\n\nAdding 110 :\n");
+    tree = addKey(tree, 110);
+    if(tree->nbKeys == 2*DEGREE+1) {
+        tree = splitNode(tree);
+    }
+    printf("\n");
     displayTree(tree, 0);
 
     /*
