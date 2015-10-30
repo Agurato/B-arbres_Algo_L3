@@ -124,6 +124,10 @@ B_tree addKey(B_tree tree, int key) {
     return tree;
 }
 
+B_tree mergeNode(B_tree tree) {
+    
+}
+
 B_tree deleteKey(B_tree tree, int key) {
 
 }

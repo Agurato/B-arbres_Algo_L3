@@ -40,16 +40,18 @@ int main(int argc, char const *argv[]) {
     tree->sons[4]->keys[1] = 135;
     tree->sons[4]->keys[2] = 145;
 
-    tree = addKey(tree, 80);
-    tree = addKey(tree, 105);
-    tree = addKey(tree, 85);
-    tree = addKey(tree, 110);
-
-    /* Il y a peut-être besoin de ça après chaque addKey(...)
-    if(tree->nbKeys == 2*DEGREE+1) {
-        tree = splitNode(tree);
+    int keyAdd[] = {80, 105, 85, 110};
+    int i;
+    for(i=0 ; i<sizeof(keyAdd)/sizeof(int) ; i++) {
+        if(! keyBelongs(tree, keyAdd[i])) {
+            tree = addKey(tree, keyAdd[i]);
+        }
+        /*
+        if(tree->nbKeys == 2*DEGREE+1) {
+            tree = splitNode(tree);
+        }
+        */
     }
-    */
 
     displayTree(tree, 0);
 
