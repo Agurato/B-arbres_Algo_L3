@@ -53,6 +53,16 @@ int main(int argc, char const *argv[]) {
 
     displayTree(tree, 0);
 
+    int keyTest;
+    printf("\nType in a key to test : ");
+    scanf("%d", &keyTest);
+    if(keyBelongs(tree, keyTest)) {
+        printf("%d belongs to tree\n", keyTest);
+    }
+    else {
+        printf("%d doesn't belong to tree\n", keyTest);
+    }
+
     /*
     B_tree tree = createTree();
     tree->nbKeys = 3;

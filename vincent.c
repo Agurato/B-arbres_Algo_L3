@@ -128,8 +128,25 @@ B_tree deleteKey(B_tree tree, int key) {
 
 }
 
-B_tree keyBelongs(B_tree tree, int key) {
+Boolean keyBelongs(B_tree tree, int key) {
+    // If the tree isn't empty
+    if(! emptyTree(tree)) {
+        int pos;
+        // We stop at the right key
+        for(pos=0 ; (pos < tree->nbKeys) && (key > tree->keys[pos]) ; pos++) {
+        }
+        // If the key of the tree we stop at is the key we search, we found it !!
+        if(key == tree->keys[pos]) {
+            return true;
+        }
+        // Else, we try with the son
+        else {
+            return (keyBelongs(tree->sons[pos], key));
+        }
 
+    }
+
+    return false;
 }
 
 void displayTree(B_tree tree, int height) {

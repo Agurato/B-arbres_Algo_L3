@@ -15,5 +15,5 @@ B_tree deleteTree(B_tree tree);
 B_tree splitNode(B_tree tree);
 B_tree addKey(B_tree tree, int key);
 B_tree deleteKey(B_tree tree, int key);
-B_tree keyBelongs(B_tree tree, int key);
+Boolean keyBelongs(B_tree tree, int key);
 void displayTree(B_tree tree, int height);
