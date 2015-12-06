@@ -9,7 +9,7 @@ B_tree createTree() {
     for(i=0 ; i<2*DEGREE+1 ; i++) {
         tree->sons[i] = NULL;
     }
-    tree->tempSon = NULL;
+    //tree->tempSon = NULL;
     return tree;
 }
 
@@ -27,6 +27,37 @@ B_tree deleteTree(B_tree tree) {
     }
 
     return NULL;
+}
+
+B_tree explodeNode(B_tree tree, Boolean addOnLeft) {
+    int i = 0, limit = DEGREE;
+    B_tree father = createTree();
+    B_tree leftSon = createTree();
+    B_tree rightSon = createTree();
+
+    if(addOnLeft) {
+        limit = DEGREE-1;
+    }
+
+    father->keys[father->nbKeys ++] = tree->keys[limit];
+    for(i=0 ; i<limit ; i++) {
+        leftSon->keys[i] = tree->keys[i];
+        leftSon->sons[i] = tree->sons[i];
+        leftSon->nbKeys ++;
+    }
+    leftSon->sons[i] = tree->sons[i];
+
+    for(i=limit+1 ; i<2*DEGREE ; i++) {
+        rightSon->keys[rightSon->nbKeys] = tree->keys[i];
+        rightSon->sons[rightSon->nbKeys] = tree->sons[i];
+        rightSon->nbKeys ++;
+    }
+    rightSon->sons[rightSon->nbKeys] = tree->sons[i];
+
+    father->sons[0] = leftSon;
+    father->sons[1] = rightSon;
+
+    return father;
 }
 
 B_tree splitNode(B_tree tree) {
@@ -51,7 +82,7 @@ B_tree splitNode(B_tree tree) {
         rightSon->keys[rightSon->nbKeys ++] = tree->keys[i];
         rightSon->sons[i-DEGREE-1] = tree->sons[i];
     }
-    rightSon->sons[DEGREE] = tree->sons[2*DEGREE+1];
+    //rightSon->sons[DEGREE] = tree->sons[2*DEGREE+1];
 
     // We rearrange the sons of the tree to return
     temp->sons[0] = leftSon;
@@ -60,6 +91,75 @@ B_tree splitNode(B_tree tree) {
     return temp;
 }
 
+B_tree addKey2(B_tree tree, int key) {
+    // If the tree is empty, we had the key
+    if(emptyTree(tree)) {
+        tree = createTree();
+        tree->keys[tree->nbKeys ++] = key;
+    }
+    else {
+        if(! emptyTree(tree->sons[0])) {
+            int i = 0;
+            while((key > tree->keys[i]) && i < tree->nbKeys) {
+                i ++;
+            }
+            tree->sons[i] = addKey2(tree->sons[i], key);
+
+            // If we had to split the node, we assemble with tree
+            if(tree->sons[i]->nbKeys == 1) {
+                // If there is room for another number
+                if(tree->nbKeys < 2*DEGREE) {
+                    int j = 0;
+                    for(j=tree->nbKeys ; j>i ; j--) {
+                        tree->keys[j] = tree->keys[j-1];
+                        tree->sons[j+1] = tree->sons[j];
+                    }
+                    tree->keys[i] = tree->sons[i]->keys[0];
+                    tree->sons[i+1] = tree->sons[i]->sons[1];
+                    tree->sons[i] = tree->sons[i]->sons[0];
+                    tree->nbKeys ++;
+                }
+                else {
+                    B_tree temp = tree->sons[2*DEGREE];
+
+                    int j = 0;
+                    for(j=tree->nbKeys ; j>i ; j--) {
+                        tree->keys[j] = tree->keys[j-1];
+                        tree->sons[j+1] = tree->sons[j];
+                    }
+                    tree->keys[i] = tree->sons[i]->keys[0];
+                    tree->sons[i+1] = tree->sons[i]->sons[1];
+                    tree->sons[i] = tree->sons[i]->sons[0];
+                    tree->nbKeys ++;
+
+                    tree = splitNode(tree);
+
+                    tree->sons[1]->sons[DEGREE] = temp;
+                }
+            }
+        }
+        else {
+            int i = 0;
+            while((key > tree->keys[i]) && i < tree->nbKeys) {
+                i ++;
+            }
+            int j;
+            for(j=tree->nbKeys ; j>i ; j--) {
+                tree->keys[j] = tree->keys[j-1];
+            }
+            tree->keys[i] = key;
+            tree->nbKeys ++;
+
+            if(tree->nbKeys == 2*DEGREE+1) {
+                tree = splitNode(tree);
+            }
+        }
+        // Here CHECK IF NOMBRE CLES > 2*DEGREE
+    }
+    return tree;
+}
+
+/*
 B_tree addKey(B_tree tree, int key) {
     // If the tree is empty, we simply add the new key
     if(emptyTree(tree)) {
@@ -123,13 +223,14 @@ B_tree addKey(B_tree tree, int key) {
 
     return tree;
 }
+*/
 
 B_tree mergeNode(B_tree tree) {
-    
+    return NULL;
 }
 
 B_tree deleteKey(B_tree tree, int key) {
-
+    return NULL;
 }
 
 Boolean keyBelongs(B_tree tree, int key) {

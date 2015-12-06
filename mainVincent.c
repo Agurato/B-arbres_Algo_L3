@@ -40,21 +40,30 @@ int main(int argc, char const *argv[]) {
     tree->sons[4]->keys[1] = 135;
     tree->sons[4]->keys[2] = 145;
 
+    tree = addKey2(tree, 80);
+    tree = addKey2(tree, 105);
+    tree = addKey2(tree, 85);
+    tree = addKey2(tree, 110);
+
+    displayTree(tree, 0);
+
+    /*
     int keyAdd[] = {80, 105, 85, 110};
     int i;
     for(i=0 ; i<sizeof(keyAdd)/sizeof(int) ; i++) {
         if(! keyBelongs(tree, keyAdd[i])) {
-            tree = addKey(tree, keyAdd[i]);
+            tree = addKey2(tree, keyAdd[i]);
         }
-        /*
+
         if(tree->nbKeys == 2*DEGREE+1) {
             tree = splitNode(tree);
         }
-        */
+
     }
 
     displayTree(tree, 0);
-
+    */
+    /*
     int keyTest;
     printf("\nType in a key to test : ");
     scanf("%d", &keyTest);
@@ -64,7 +73,7 @@ int main(int argc, char const *argv[]) {
     else {
         printf("%d doesn't belong to tree\n", keyTest);
     }
-
+    */
     /*
     B_tree tree = createTree();
     tree->nbKeys = 3;
