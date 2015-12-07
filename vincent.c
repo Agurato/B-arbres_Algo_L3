@@ -155,6 +155,183 @@ B_tree addKey2(B_tree tree, int key) {
             }
         }
         // Here CHECK IF NOMBRE CLES > 2*DEGREE
+        // OU PAS ! PUTAIN J'AI OUBLIE !!
+    }
+    return tree;
+}
+
+Boolean isInLeaf(B_tree tree, int key) {
+    int i;
+    Boolean found = false;
+
+    while(! found) {
+        i = 0;
+        while((key < tree->keys[i]) && (i < tree->nbKeys)) {
+            i++;
+        }
+        if(key != tree->keys[i]) {
+            tree = tree->sons[i];
+        }
+        else {
+            found = true;
+        }
+    }
+
+    if(emptyTree(tree->sons[0])) {
+        return true;
+    }
+    /*
+    else {
+        int newKey;
+        // We exchange the max value < or the min value > with the value x we want to delete and delete the value x
+        if(tree->sons[i]->nbKeys >= tree->sons[i+1]->nbKeys) {
+            newKey = tree->sons[i]->keys[tree->sons[i]->nbKeys-1];
+        }
+        else {
+            tree->keys[i] = tree->sons[i+1]->keys[0];
+            tree->sons[i+1]->nbKeys --;
+            int j;
+            for(j=0 ; j<tree->sons[i+1]->nbKeys ; j++) {
+                tree->sons[i+1]->keys[j] = tree->sons[i+1]->keys[j+1];
+            }
+            newKey = i+1;
+        }
+
+        return newKey;
+    }
+    */
+    return false;
+}
+
+B_tree switchKeys(B_tree tree, int key) {
+    if(!emptyTree(tree)) {
+        int i = 0;
+        // Get to the right position
+        while((key > tree->keys[i]) && (i < tree->nbKeys)) {
+            i ++;
+        }
+        // If we didn't find it, search in the son
+        if(key != tree->keys[i]) {
+            tree->sons[i] = switchKeys(tree->sons[i], key);
+        }
+        // else, we found it !!
+        else {
+            if(emptyTree(tree->sons[0])) {
+                return tree;
+            }
+            else {
+                int temp = tree->keys[i];
+                // If it's better to switch with the left son, we switch the max value of the left son
+                if(tree->sons[i]->nbKeys >= tree->sons[i+1]->nbKeys) {
+                    tree->keys[i] = tree->sons[i]->keys[tree->sons[i]->nbKeys-1];
+                    tree->sons[i]->keys[tree->sons[i]->nbKeys-1] = temp;
+                }
+                // else, we switch with the min value of the right son
+                else {
+                    tree->keys[i] = tree->sons[i+1]->keys[0];
+                    tree->sons[i+1]->keys[0] = temp;
+                }
+            }
+        }
+    }
+
+    return tree;
+}
+
+B_tree removeKey(B_tree tree, int key) {
+    if(! emptyTree(tree)) {
+        int i = 0;
+        // Get to the right position
+        while((key > tree->keys[i]) && (i < tree->nbKeys)) {
+            i ++;
+        }
+        // If we didn't find it, search in the son
+        if(key != tree->keys[i]) {
+            tree->sons[i] = switchKeys(tree->sons[i], key);
+        }
+        // else, we found it !!
+        else {
+            int index;
+            // We exchange the max value < or the min value > with the value x we want to delete and delete the value x
+            if(tree->sons[i]->nbKeys >= tree->sons[i+1]->nbKeys) {
+                tree->keys[i] = tree->sons[i]->keys[tree->sons[i]->nbKeys-1];
+                tree->sons[i]->nbKeys --;
+                index = i;
+            }
+            else {
+                tree->keys[i] = tree->sons[i+1]->keys[0];
+                tree->sons[i+1]->nbKeys --;
+                int j;
+                for(j=0 ; j<tree->sons[i+1]->nbKeys ; j++) {
+                    tree->sons[i+1]->keys[j] = tree->sons[i+1]->keys[j+1];
+                }
+                index = i+1;
+            }
+
+            if(tree->sons[index]->nbKeys < DEGREE) {
+
+            }
+            else {
+
+            }
+        }
+    }
+
+    return tree;
+}
+
+B_tree mergeNode(B_tree tree) {
+    return NULL;
+}
+
+Boolean keyBelongs(B_tree tree, int key) {
+    // If the tree isn't empty
+    if(! emptyTree(tree)) {
+        int pos;
+        // We stop at the right key
+        for(pos=0 ; (pos < tree->nbKeys) && (key > tree->keys[pos]) ; pos++) {
+        }
+        // If the key of the tree we stop at is the key we search, we found it !!
+        if(key == tree->keys[pos]) {
+            return true;
+        }
+        // Else, we try with the son
+        else {
+            return (keyBelongs(tree->sons[pos], key));
+        }
+
+    }
+
+    return false;
+}
+
+void displayTree(B_tree tree, int height) {
+    if(! emptyTree(tree)) {
+        int i;
+        printf("%d \\ ", height);
+        for(i=0 ; i<tree->nbKeys ; i++) {
+            printf("%d - ", tree->keys[i]);
+        }
+        printf("\n");
+        for(i=0 ; i<DEGREE*2+1 ; i++) {
+            displayTree(tree->sons[i], height+1);
+        }
+    }
+}
+
+B_tree voidTree(B_tree tree) {
+    if(! emptyTree(tree)) {
+        if(! emptyTree(tree->sons[0])) {
+            int i;
+            for(i=0 ; i<2*DEGREE+1 ; i++) {
+                tree->sons[0] = voidTree(tree->sons[0]);
+            }
+        }
+        int i;
+        for(i=0 ; i<2*DEGREE+1 ; i++) {
+            free(tree);
+            tree = NULL;
+        }
     }
     return tree;
 }
@@ -224,46 +401,3 @@ B_tree addKey(B_tree tree, int key) {
     return tree;
 }
 */
-
-B_tree mergeNode(B_tree tree) {
-    return NULL;
-}
-
-B_tree deleteKey(B_tree tree, int key) {
-    return NULL;
-}
-
-Boolean keyBelongs(B_tree tree, int key) {
-    // If the tree isn't empty
-    if(! emptyTree(tree)) {
-        int pos;
-        // We stop at the right key
-        for(pos=0 ; (pos < tree->nbKeys) && (key > tree->keys[pos]) ; pos++) {
-        }
-        // If the key of the tree we stop at is the key we search, we found it !!
-        if(key == tree->keys[pos]) {
-            return true;
-        }
-        // Else, we try with the son
-        else {
-            return (keyBelongs(tree->sons[pos], key));
-        }
-
-    }
-
-    return false;
-}
-
-void displayTree(B_tree tree, int height) {
-    if(! emptyTree(tree)) {
-        int i;
-        printf("%d \\ ", height);
-        for(i=0 ; i<tree->nbKeys ; i++) {
-            printf("%d - ", tree->keys[i]);
-        }
-        printf("\n");
-        for(i=0 ; i<DEGREE*2+1 ; i++) {
-            displayTree(tree->sons[i], height+1);
-        }
-    }
-}

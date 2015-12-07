@@ -46,6 +46,17 @@ int main(int argc, char const *argv[]) {
     tree = addKey2(tree, 110);
 
     displayTree(tree, 0);
+    printf("\n");
+
+    int removeKey = 20;
+    if(keyBelongs(tree, removeKey)) {
+        // Si c'est dans un noeud interne, on intervertit les 2 valeurs
+        tree = switchKeys(tree, removeKey);
+        // Ca supprime la clé
+        displayTree(tree, 0);
+        printf("\n");
+        //tree = removeKey(tree, 41);
+    }
 
     /*
     int keyAdd[] = {80, 105, 85, 110};
