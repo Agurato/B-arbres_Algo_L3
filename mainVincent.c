@@ -5,6 +5,25 @@
 int main(int argc, char const *argv[]) {
 
     B_tree tree = createTree();
+    int tab[1000] = {6, 7, 15, 19, 33, 45, 51, 64, 75, 82, 93, 100, 103, 123, 9, 11, 67, 69, 99};
+
+    int i;
+    for(i=0 ; i<19 ; i++) {
+        tree = addKey2(tree, tab[i]);
+    }
+
+    displayTree(tree, 0);
+    /*
+    tree = voidTree(tree);
+    for(i=0 ; i<19 ; i++) {
+        if(33 != tab[i]) {
+            tree = addKey2(tree, tab[i]);
+        }
+    }
+
+    displayTree(tree, 0);
+    */
+    /*
     tree->nbKeys = 4;
     tree->keys[0] = 9;
     tree->keys[1] = 20;
@@ -40,6 +59,7 @@ int main(int argc, char const *argv[]) {
     tree->sons[4]->keys[1] = 135;
     tree->sons[4]->keys[2] = 145;
 
+
     tree = addKey2(tree, 80);
     tree = addKey2(tree, 105);
     tree = addKey2(tree, 85);
@@ -48,15 +68,16 @@ int main(int argc, char const *argv[]) {
     displayTree(tree, 0);
     printf("\n");
 
-    int removeKey = 20;
-    if(keyBelongs(tree, removeKey)) {
+    int key = 41;
+    if(keyBelongs(tree, key)) {
         // Si c'est dans un noeud interne, on intervertit les 2 valeurs
-        tree = switchKeys(tree, removeKey);
+        tree = switchKeys(tree, key);
         // Ca supprime la clé
+        tree = removeKey(tree, key);
         displayTree(tree, 0);
         printf("\n");
-        //tree = removeKey(tree, 41);
     }
+    */
 
     /*
     int keyAdd[] = {80, 105, 85, 110};

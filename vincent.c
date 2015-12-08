@@ -180,26 +180,7 @@ Boolean isInLeaf(B_tree tree, int key) {
     if(emptyTree(tree->sons[0])) {
         return true;
     }
-    /*
-    else {
-        int newKey;
-        // We exchange the max value < or the min value > with the value x we want to delete and delete the value x
-        if(tree->sons[i]->nbKeys >= tree->sons[i+1]->nbKeys) {
-            newKey = tree->sons[i]->keys[tree->sons[i]->nbKeys-1];
-        }
-        else {
-            tree->keys[i] = tree->sons[i+1]->keys[0];
-            tree->sons[i+1]->nbKeys --;
-            int j;
-            for(j=0 ; j<tree->sons[i+1]->nbKeys ; j++) {
-                tree->sons[i+1]->keys[j] = tree->sons[i+1]->keys[j+1];
-            }
-            newKey = i+1;
-        }
 
-        return newKey;
-    }
-    */
     return false;
 }
 
@@ -221,19 +202,35 @@ B_tree switchKeys(B_tree tree, int key) {
             }
             else {
                 int temp = tree->keys[i];
+                int index;
                 // If it's better to switch with the left son, we switch the max value of the left son
                 if(tree->sons[i]->nbKeys >= tree->sons[i+1]->nbKeys) {
                     tree->keys[i] = tree->sons[i]->keys[tree->sons[i]->nbKeys-1];
                     tree->sons[i]->keys[tree->sons[i]->nbKeys-1] = temp;
+                    index = i;
                 }
                 // else, we switch with the min value of the right son
                 else {
                     tree->keys[i] = tree->sons[i+1]->keys[0];
                     tree->sons[i+1]->keys[0] = temp;
+                    index = i+1;
+                }
+
+                // If where we switched the keys is a inner node, we re-call the function
+                if(! emptyTree(tree->sons[index]->sons[0])) {
+                    tree->sons[index] = switchKeys(tree->sons[index], key);
                 }
             }
         }
     }
+
+    return tree;
+}
+
+B_tree removeKey2(B_tree tree, int key) {
+    tree = voidTree(tree);
+
+    
 
     return tree;
 }
@@ -251,30 +248,66 @@ B_tree removeKey(B_tree tree, int key) {
         }
         // else, we found it !!
         else {
-            int index;
-            // We exchange the max value < or the min value > with the value x we want to delete and delete the value x
-            if(tree->sons[i]->nbKeys >= tree->sons[i+1]->nbKeys) {
-                tree->keys[i] = tree->sons[i]->keys[tree->sons[i]->nbKeys-1];
-                tree->sons[i]->nbKeys --;
-                index = i;
-            }
-            else {
-                tree->keys[i] = tree->sons[i+1]->keys[0];
-                tree->sons[i+1]->nbKeys --;
+            // We delete the key if there is enough keys
+            if(tree->nbKeys > DEGREE) {
                 int j;
-                for(j=0 ; j<tree->sons[i+1]->nbKeys ; j++) {
-                    tree->sons[i+1]->keys[j] = tree->sons[i+1]->keys[j+1];
+                tree->nbKeys --;
+                for(j=i ; j<tree->nbKeys ; j++) {
+                    tree->keys[j] = tree->keys[j+1];
                 }
-                index = i+1;
-            }
-
-            if(tree->sons[index]->nbKeys < DEGREE) {
-
-            }
-            else {
-
             }
         }
+
+        // If we didn't manage to delete it
+        int j=0;
+        while((key > tree->sons[i]->keys[j]) && (j < tree->sons[i]->nbKeys)) {
+            j++;
+        }
+
+        if(key == tree->sons[i]->keys[j]) {
+            int prevKeys = 0, nextKeys = 0;
+            if(i > 0) {
+                prevKeys = tree->sons[i-1]->nbKeys;
+            }
+            if(i < tree->nbKeys) {
+                nextKeys = tree->sons[i+1]->nbKeys;
+            }
+
+            if(prevKeys >= nextKeys) {
+                if(prevKeys > DEGREE) {
+                    // We shift all the keys
+                    int k;
+                    for(k=j ; k<tree->nbKeys-1 ; j++) {
+                        tree->sons[i]->keys[k] = tree->sons[i]->keys[k+1];
+                    }
+                    tree->sons[i]->nbKeys --;
+                    // We add the replacing key to the left;
+                    tree->sons[i] = addKey2(tree->sons[i], tree->keys[i-1]);
+                    // We put the left son's right key on the father
+                    tree->keys[i-1] = tree->sons[i-1]->keys[prevKeys-1];
+                    tree->sons[i-1]->nbKeys --;
+                }
+            }
+            else {
+                if(nextKeys > DEGREE) {
+                    // We shift all the keys
+                    int k;
+                    for(k=j ; k<tree->nbKeys-1 ; j++) {
+                        tree->sons[i]->keys[k] = tree->sons[i]->keys[k+1];
+                    }
+                    tree->sons[i]->nbKeys --;
+                    // We add the replacing key to the left;
+                    tree->sons[i] = addKey2(tree->sons[i], tree->keys[i]);
+                    // We put the right son's left key on the father
+                    tree->keys[i] = tree->sons[i+1]->keys[0];
+                    tree->sons[i+1]->nbKeys --;
+                    for(k=0 ; k<tree->sons[i+1]->nbKeys ; k++) {
+                        tree->sons[i+1]->keys[k] = tree->sons[i+1]->keys[k+1];
+                    }
+                }
+            }
+        }
+
     }
 
     return tree;
