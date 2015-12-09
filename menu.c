@@ -1,19 +1,28 @@
+#include <sys/stat.h>
+#include <string.h>
+#include <unistd.h>
 #include "b_tree.h"
 
 int type_n();
 int displayMenu(void);
+char* getFileName();
 
 int main(int argc, char *argv[]){
     int choice = 0;
     int values[1000] = {0};
     int valuesSize = 0, userValue = 0;
+    char *fileName;
+    char filePath[] = "saves/";
 
-    int i;
+    int i, d = 0;
+
+    struct stat st = {0};
+
 
     B_tree tree = createTree();
-    while(choice != 8){
+    while(choice != 8) {
         choice = displayMenu();
-        switch(choice){
+        switch(choice) {
             case 1 :
                 do {
                     printf("Enter the key you want to add (must be > 0) : ");
@@ -86,6 +95,9 @@ int main(int argc, char *argv[]){
                 printf("\x1b[32mSucceeded !\x1b[0m\n\n");
                 break;
             case 6:
+                fileName = getFileName();
+                printf("Saved as %s\n", strcat(filePath, fileName));
+                //fopen(strcat(filePath, fileName), "w+");
                 break;
             case 7 :
                 break;
@@ -95,6 +107,11 @@ int main(int argc, char *argv[]){
                 break;
             default :
                 break;
+        }
+        while(getchar() != '\n'){
+            while(d != '\n' && d != EOF){
+                d = getchar();
+            }
         }
     }
 
@@ -125,8 +142,21 @@ int displayMenu(void) {
 
 		printf("Enter your choice : ");
         choice = type_n();
-		printf("choice : %d\n",choice);
+		//printf("choice : %d\n",choice);
 	} while((choice < 1 || choice > 8));
 
 	return choice;
+}
+
+char* getFileName() {
+    char* file = malloc(25*sizeof(char));
+    //printf("Please enter the file name : ");
+
+    do {
+        printf("Please enter the file name : ");
+        read(0, file, 25);
+        //printf("Tapez Entrée\n");
+    } while(getchar() != '\n');
+
+    return file;
 }
